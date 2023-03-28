@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>To-Do List Application</title>
+  <style>
+    ul {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    li {
+      margin: 10px 0;
+      padding: 10px;
+      border: 1px solid gray;
+      cursor: pointer;
+    }
+
+    li:hover {
+      background-color: whitesmoke;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>To-Do List</h1>
+  <form>
+    <label for="task">Task:</label>
+    <input type="text" id="task" name="task">
+    <button type="button" onclick="addTask()">Add</button>
+  </form>
+  <ul id="taskList"></ul>
+
+  <div id="taskDetails" class="hidden">
+    <h2 id="taskTitle"></h2>
+    <p id="taskDescription"></p>
+    <button type="button" onclick="hideTaskDetails()">Close</button>
+  </div>
+
+  <script>
+    let tasks = [];
+
+    function addTask() {
+      let taskInput = document.getElementById("task");
+      let task = taskInput.value.trim();
+      if (task !== "") {
+        tasks.push({
+          title: task,
+          description: ""
+        });
+        taskInput.value = "";
+        renderTasks();
+      }
+    }
+
+    function removeTask(index) {
+      tasks.splice(index, 1);
+      renderTasks();
+    }
+
+    function showTaskDetails(index) {
+      let task = tasks[index];
+      let title = document.getElementById("taskTitle");
+      let description = document.getElementById("taskDescription");
+      title.innerText = task.title;
+      description.innerText = task.description;
+      document.getElementById("taskDetails").classList.remove("hidden");
+    }
+
+    function hideTaskDetails() {
+      document.getElementById("taskDetails").classList.add("hidden");
+    }
+
+    function renderTasks() {
+      let taskList = document.getElementById("taskList");
+      taskList.innerHTML = "";
+      tasks.forEach((task, index) => {
+        let li = document.createElement("li");
+        li.innerText = task.title;
+        li.addEventListener("click", () => {
+          showTaskDetails(index);
+        });
+        let removeButton = document.createElement("button");
+        removeButton.innerText = "Remove";
+        removeButton.addEventListener("click", () => {
+          removeTask(index);
+        });
+        li.appendChild(removeButton);
+        taskList.appendChild(li);
+      });
+    }
+  </script>
+</body>
+</html>
